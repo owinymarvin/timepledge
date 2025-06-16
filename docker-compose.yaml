@@ -1,0 +1,33 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - loan_data:/app/data/loan_data
+      - advance_data:/app/data/advance_data
+      - plot_data:/app/data/plots
+    networks:
+      - loan_app_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
+    environment:
+      - BASE_URL=http://backend:8000
+    networks:
+      - loan_app_network
+
+volumes:
+  loan_data:
+  advance_data:
+  plot_data:
+
+networks:
+  loan_app_network:
+    driver: bridge
